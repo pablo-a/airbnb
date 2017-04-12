@@ -56,12 +56,13 @@ class Airbnb(object):
         ID), then get data about reviews or details of it.
         The method take a city name (string) as input and return a
         utf-8 encoded json string you can easily parse with json.loads() or
-        a HTTP status code if an error occurs."""
+        a HTTP status code if an error occured."""
 
         url = "https://api.airbnb.com/v2/search_results"
         key1 = "3092nxybyb0otqw18e8nh5nty"
         key2 = "d306zoyjsyarp7ifhu67rjxn52tv0t20"
 
+        # TODO: add checkin and checkout to parameters.
         params = {
             "client_id" : key1,
             "locale" : "en-US",
