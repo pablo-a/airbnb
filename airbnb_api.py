@@ -31,15 +31,15 @@ class Airbnb(object):
 
         return response.content
 
-    def get_review(self, logement_id):
+    def get_review(self, logement_id, offset):
         url = "https://api.airbnb.com/v2/reviews"
         params = {
             "client_id" : "3092nxybyb0otqw18e8nh5nty",
             "locale" : "en-US",
             "currency" : "USD",
             "_format" : "for_mobile_client",
-            "_limit" : "20",
-            "_offset" : "0",
+            "_limit" : "50",
+            "_offset" : offset,
             "_order" : "language",
             "listing_id" : logement_id,
             "role" : "all"
@@ -63,7 +63,7 @@ class Airbnb(object):
         key2 = "d306zoyjsyarp7ifhu67rjxn52tv0t20"
 
         params = {
-            "client_id" : key2,
+            "client_id" : key1,
             "locale" : "en-US",
             "currency" : "USD",
             "_limit" : "50",
