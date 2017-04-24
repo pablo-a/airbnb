@@ -2,7 +2,31 @@
 import json
 from airbnb_api import Airbnb
 
-def get_all_result_city(city, checkin, checkout):
+def get_listings_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom=18, checkin=None, checkout=None):
+    api = Airbnb()
+
+    page = 1
+    last_name = ""
+
+    while page < 20:
+        print(page)
+        json_result = Airbnb.get_logement_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom, page)
+        data = json.loads(json_result)
+
+        try:
+            res = data['explore_tabs'][0]['sections'][0]['listings']
+        except IndexError:
+            break
+            
+        current_name = res[0]['listing']['name']
+        if current_name == last_name:
+            break
+        last_name = current_name
+
+        for listing in res:
+            yield listing
+
+def get_listings_by_city(city, checkin, checkout):
     """It is a generator, to be used like :
     for appart in get_all_result_city("Bordeaux")"""
 
@@ -60,5 +84,5 @@ def get_details(logement_id):
 if __name__ == '__main__':
     # for rev in get_reviews(17834617):
     #     print(rev['comments'].encode('utf-8'))
-    for appart in get_all_result_city("picpus", "20170505", "20170506"):
+    for appart in get_listings_by_city("picpus", "20170505", "20170506"):
         print(appart['listing']['name'].encode('utf8'))
