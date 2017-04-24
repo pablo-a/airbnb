@@ -17,7 +17,7 @@ def get_listings_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom=18, checkin=None, c
             res = data['explore_tabs'][0]['sections'][0]['listings']
         except IndexError:
             break
-            
+
         current_name = res[0]['listing']['name']
         if current_name == last_name:
             break
@@ -75,9 +75,18 @@ def get_details(logement_id):
     a dictionnary object with all the infos wanted"""
     api = Airbnb()
 
-    json_result = json.loads(api.get_logement_details(logement_id))
+    json_result = api.get_logement_details(logement_id)
     data = json.loads(json_result)
     return data['listing']
+
+def get_available(listing_id, month, year, count=4):
+    """take a logement id (string or int) as a parameter and return
+    a dictionnary object with all availability for the listing"""
+
+    airbnb = Airbnb()
+    json_result = airbnb.get_available(listing_id, mont, year, count)
+    data = json.loads(json_result)
+    return data['calendar_months']
 
 
 
