@@ -12,11 +12,15 @@ def get_all_result_city(city, checkin, checkout):
     last_name = ""
 
     while offset < 1000:
+        print(offset)
         json_result = api.get_logement(city, checkin, checkout, offset)
         data = json.loads(json_result)
 
         #check if we have same result than last request => end result
-        current_name = data['search_results'][0]['listing']['name']
+        try:
+            current_name = data['search_results'][0]['listing']['name']
+        except IndexError:
+            break
         if current_name == last_name:
             break
         last_name = current_name
@@ -54,7 +58,7 @@ def get_details(logement_id):
 
 
 if __name__ == '__main__':
-    for rev in get_reviews(17834617):
-        print(rev['comments'].encode('utf-8'))
-    # for appart in get_all_result_city("Bordeaux"):
-    #     print(appart['listing']['name'].encode('utf8'))
+    # for rev in get_reviews(17834617):
+    #     print(rev['comments'].encode('utf-8'))
+    for appart in get_all_result_city("picpus", "20170505", "20170506"):
+        print(appart['listing']['name'].encode('utf8'))
