@@ -21,7 +21,7 @@ Endpoint : https://www.airbnb.fr/api/v2/calendar_months
 
 
 ## Search Listings by GPS coordinates
-It is based on 2 points (North-West and South-East) and a zoom.
+It is based on 2 points (North-East and South-West) and a zoom.
 
 HTTP Method : `GET`  
 Endpoint : `https://www.airbnb.fr/api/v2/explore_tabs`
