@@ -10,12 +10,13 @@ def get_listings_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom=18, checkin=None, c
 
     while page < 20:
         print(page)
-        json_result = Airbnb.get_logement_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom, page)
+        json_result = api.get_logement_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom, page)
         data = json.loads(json_result)
 
         try:
             res = data['explore_tabs'][0]['sections'][0]['listings']
         except IndexError:
+            print("no more result")
             break
 
         current_name = res[0]['listing']['name']
@@ -25,6 +26,8 @@ def get_listings_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom=18, checkin=None, c
 
         for listing in res:
             yield listing
+
+        page += 1
 
 def get_listings_by_city(city, checkin, checkout):
     """It is a generator, to be used like :
@@ -93,5 +96,8 @@ def get_available(listing_id, month, year, count=4):
 if __name__ == '__main__':
     # for rev in get_reviews(17834617):
     #     print(rev['comments'].encode('utf-8'))
-    for appart in get_listings_by_city("picpus", "20170505", "20170506"):
-        print(appart['listing']['name'].encode('utf8'))
+    # for appart in get_listings_by_city("picpus", "20170505", "20170506"):
+    #     print(appart['listing']['name'].encode('utf8'))
+    for appart in get_listings_by_gps(48.8672,2.3626,48.8658,2.3594, 18):
+        with open("appart1", "wb") as f:
+            f.write(str(appart))
