@@ -1,6 +1,7 @@
 # coding=utf-8
 from browse_airbnb import get_listings_by_gps
 from pablo import Pablo
+import time
 import pandas as pd
 import numpy as np
 from shapely.geometry import Polygon, mapping
@@ -52,23 +53,50 @@ def get_square():
 def search_on_all_squares():
     bdd = Pablo()
 
-    insert_req = """INSERT INTO airbnb_test
-    (name_logement, id_airbnb, nb_reviews)
-    VALUES (%s, %s, %s)"""
+    insert_req = """INSERT INTO airbnb (id_airbnb, listing_name, rate,
+    rate_with_fee, review_nb, star_rating, city, superhost, bed_nb, picture_nb,
+    latitude, longitude, business_travel, is_new, recommendation, date_maj,
+    instant_book)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
     lst_coordinates = get_square()
 
     # loop on all squares
-    for coo in lst_coordinates:
+    for coo in lst_coordinates[:200]:
 
         for appart in get_listings_by_gps(coo[2], coo[3], coo[0], coo[1]):
-            nb_reviews = appart['listing']['reviews_count']
-            name = appart['listing']['name']
+
+            date_maj = time.strftime("%Y%m%d")
+            instant_book = appart['pricing_quote']['can_instant_book']
+            rate_amount = appart['pricing_quote']['rate']['amount']
+            rate_service_fee_amount = appart['pricing_quote']['rate_with_service_fee']['amount']
+            recommendation = appart['recommendation_reason']
+
+
+            infos = appart['listing']
+            is_new = infos['is_new_listing']
+            nb_reviews = infos['reviews_count']
+            star_rating = infos['star_rating']
+            name = infos['name']
+            capacity = infos['person_capacity']
+            city = infos['localized_city']
+            superhost = infos['is_superhost']
+            room_type = infos['room_type']
+            bed_nb = infos['beds']
+            picture_nb = infos['picture_count']
+            latitude = infos['lat']
+            longitude = infos['lng']
+            business_travel_ready = infos['is_business_travel_ready']
             id_airbnb = appart['listing']['id']
+
 
             print(name.encode('utf-8'))
 
-            params = (name, id_airbnb, nb_reviews)
+            params = (id_airbnb, name, rate_amount, rate_service_fee_amount,
+            nb_reviews, star_rating, city, superhost, bed_nb, picture_nb,
+            latitude, longitude, business_travel_ready, is_new, recommendation,
+            date_maj, instant_book)
+
             bdd.exec_req_with_args(insert_req, params)
 
     bdd.close()
