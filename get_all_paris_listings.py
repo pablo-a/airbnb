@@ -54,23 +54,21 @@ def search_on_all_squares():
     bdd = Pablo()
 
     insert_req = """INSERT INTO airbnb (id_airbnb, listing_name, rate,
-    rate_with_fee, review_nb, star_rating, city, superhost, bed_nb, picture_nb,
-    latitude, longitude, business_travel, is_new, recommendation, date_maj,
+    review_nb, star_rating, city, superhost, bed_nb, picture_nb,
+    latitude, longitude, business_travel, is_new, date_maj,
     instant_book)
-    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
     lst_coordinates = get_square()
 
     # loop on all squares
-    for coo in lst_coordinates[:200]:
+    for coo in lst_coordinates:
 
         for appart in get_listings_by_gps(coo[2], coo[3], coo[0], coo[1]):
 
             date_maj = time.strftime("%Y%m%d")
             instant_book = appart['pricing_quote']['can_instant_book']
             rate_amount = appart['pricing_quote']['rate']['amount']
-            rate_service_fee_amount = appart['pricing_quote']['rate_with_service_fee']['amount']
-            recommendation = appart['recommendation_reason']
 
 
             infos = appart['listing']
@@ -92,10 +90,9 @@ def search_on_all_squares():
 
             print(name.encode('utf-8'))
 
-            params = (id_airbnb, name, rate_amount, rate_service_fee_amount,
-            nb_reviews, star_rating, city, superhost, bed_nb, picture_nb,
-            latitude, longitude, business_travel_ready, is_new, recommendation,
-            date_maj, instant_book)
+            params = (id_airbnb, name, rate_amount, nb_reviews, star_rating,
+            city, superhost, bed_nb, picture_nb, latitude, longitude,
+            business_travel_ready, is_new, date_maj, instant_book)
 
             bdd.exec_req_with_args(insert_req, params)
 
