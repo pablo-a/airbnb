@@ -9,6 +9,14 @@ from shapely.geometry import Polygon, mapping
 
 def get_square():
     df = pd.read_json('paris_boudaries.json')
+
+    nb_polygon = len(df['geometries'][0]['coordinates'])
+    lens = [len(df['geometries'][0]['coordinates'][i][0]) for i in range(nb_polygon)]
+
+    biggest_poly_index = lens.index(max(lens))
+    biggest_poly = df['geometries'][0]['coordinates'][biggest_poly_index][0]
+
+
     coord = df['geometries'][0]['coordinates'][0][0]
     df = pd.DataFrame(coord, columns=["Lon", "Lat"])
     # df.describe()
@@ -45,7 +53,6 @@ def get_square():
             window = Polygon([[SLon,SLat],[NLon,SLat],[NLon,NLat],[SLon,NLat]])
             if window.intersection(city):
                 l.append([SLat,SLon,NLat,NLon])
-    print(l)
     return l
 
 
@@ -69,8 +76,6 @@ def search_on_all_squares():
             date_maj = time.strftime("%Y%m%d")
             instant_book = appart['pricing_quote']['can_instant_book']
             rate_amount = appart['pricing_quote']['rate']['amount']
-
-
             infos = appart['listing']
             is_new = infos['is_new_listing']
             nb_reviews = infos['reviews_count']
@@ -87,6 +92,14 @@ def search_on_all_squares():
             business_travel_ready = infos['is_business_travel_ready']
             id_airbnb = appart['listing']['id']
 
+            # gps coordiantes => exact address.
+            # thx to government API
+            url_req = "http://api-adresse.data.gouv.fr/reverse/?lon=%s&lat=%s" % (longitude, latitude)
+            address_json = json.loads(requests.get(url_req))
+            street = address_json['features'][0]['properties']['name']
+            city = address_json['features'][0]['properties']['city']
+            postcode = address_json['features'][0]['properties']['postcode']
+            http://api-adresse.data.gouv.fr/reverse/?lon=2.37&lat=48.357
 
             print(name.encode('utf-8'))
 

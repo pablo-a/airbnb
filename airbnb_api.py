@@ -9,6 +9,15 @@ class Airbnb(object):
     api_instance.get_review(logement_id)
     api_instance.get_logement_details(logement_id)"""
 
+    def get_user_infos(self, user_id):
+        params = {
+
+        }
+
+        response = requests.get(url, params=params)
+        if response.status_code != 200:
+            return response.status_code
+
     def get_logement_details(self, logement_id):
 
         try:

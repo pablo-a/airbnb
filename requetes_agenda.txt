@@ -1,3 +1,0 @@
-https://www.airbnb.fr/api/v2/calendar_months?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=EUR&locale=fr&listing_id=432044&month=4&year=2017&count=3&_format=with_conditions
-
-https://www.airbnb.fr/api/v2/calendar_months?key=d306zoyjsyarp7ifhu67rjxn52tv0t20&currency=EUR&locale=fr&listing_id=432044&month=7&year=2017&count=3&_format=with_conditions
