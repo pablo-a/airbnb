@@ -10,13 +10,21 @@ class Airbnb(object):
     api_instance.get_logement_details(logement_id)"""
 
     def get_user_infos(self, user_id):
-        params = {
 
+        url = "https://api.airbnb.com/v2/users/%s?" % user_id
+
+        params = {
+            "client_id" : "3092nxybyb0otqw18e8nh5nty",
+            "_format" : "v1_legacy_show",
+            "locale" : "en-Us",
+            "currency" : "USD"
         }
 
         response = requests.get(url, params=params)
         if response.status_code != 200:
             return response.status_code
+
+        return response.content
 
     def get_logement_details(self, logement_id):
 

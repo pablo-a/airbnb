@@ -2,6 +2,13 @@
 import json
 from airbnb_api import Airbnb
 
+def get_user_infos(user_id):
+    api = Airbnb()
+
+    json_result = api.get_user_infos(user_id)
+    data = json.loads(json_result)
+    return data['user']
+
 def get_listings_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom=18, checkin=None, checkout=None):
     api = Airbnb()
 
