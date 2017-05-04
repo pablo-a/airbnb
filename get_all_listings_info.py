@@ -17,6 +17,22 @@ def update_listing_info(listing_id):
     if not infos:
         return
 
+    # ctrl + maj + /
+    # gps coordinates => exact address.
+    # thx to government API
+    url_req = "http://api-adresse.data.gouv.fr/reverse/?lon=%s&lat=%s" % (longitude, latitude)
+    response = requests.get(url_req)
+    address_json = json.loads(response.content)
+    try:
+        street = address_json['features'][0]['properties']['name']
+        postcode = address_json['features'][0]['properties']['postcode']
+        city = address_json['features'][0]['properties']['city']
+    except IndexError:
+        pass
+    else:
+        bdd.exec_req_with_args("""UPDATE airbnb SET street = %s, city = %s,
+        postcode = %s WHERE id_airbnb = %s""", (street, city, postcode, listing_id))
+
     # récupération des champs interessants
     owner_id = infos['user_id']
     min_night = infos['min_nights']
@@ -30,8 +46,6 @@ def update_listing_info(listing_id):
     bed_type = infos['bed_type']
     H24_checking = 1 if 43 in infos['amenities_ids'] else 0
 
-    with open("amenities.txt", "a") as f:
-        f.write(str(infos['amenities']))
 
     # execution requête
     params = (owner_id, min_night, max_night, property_type, calendar_updated,
