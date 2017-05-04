@@ -29,12 +29,30 @@ def get_user(user_id):
 def get_users_paris():
     bdd = Pablo()
 
-    bdd.executerReq("SELECT DISTINCT author_id FROM airbnb_review")
+    # bdd.executerReq("SELECT DISTINCT author_id FROM airbnb_review")
+    # for user in bdd.resultatReq():
+    #     get_user(user)
+
+    bdd.executerReq("SELECT DISTINCT recipient_id FROM airbnb_review limit 3")
+    for user in bdd.resultatReq():
+        get_user(user[0])
+
+    bdd.close()
+
+# travailler les requetes !
+def get_new_users():
+    pass
+    bdd = Pablo()
+
+    bdd.executerReq("SELECT DISTINCT author_id FROM airbnb_review where author_id NOT IN (SELECT DISTINCT user_id FROM airbnb_user)")
     for user in bdd.resultatReq():
         get_user(user)
 
-    bdd.executerReq("SELECT DISTINCT recipient_id FROM airbnb_review")
-        for user in bdd.resultatReq():
-            get_user(user)
+    bdd.executerReq("SELECT DISTINCT recipient_id FROM airbnb_review limit 3")
+    for user in bdd.resultatReq():
+        get_user(user[0])
 
     bdd.close()
+
+if __name__ == '__main__':
+    get_users_paris()

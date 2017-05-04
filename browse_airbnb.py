@@ -94,7 +94,7 @@ def get_available(listing_id, month, year, count=4):
     a dictionnary object with all availability for the listing"""
 
     airbnb = Airbnb()
-    json_result = airbnb.get_available(listing_id, mont, year, count)
+    json_result = airbnb.get_available(listing_id, month, year, count)
     data = json.loads(json_result)
     return data['calendar_months']
 
