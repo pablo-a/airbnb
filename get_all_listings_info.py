@@ -12,17 +12,26 @@ def update_listing_info(listing_id):
     WHERE id_airbnb = %s"""
 
     # appel à l'interface API
+    # en cas d'erreur on ne fait rien.
     infos = get_details(listing_id)
+    if not infos:
+        return
 
     # récupération des champs interessants
     owner_id = infos['user_id']
     min_night = infos['min_nights']
     max_night = infos['max_nights']
     property_type = infos['property_type']
-    calendar_updated = infos["calendar_updated_at"]
-    calendar_updated = dateparser.parse(calendar_updated).date()
+    try:
+        calendar_updated = infos["calendar_updated_at"]
+        calendar_updated = dateparser.parse(calendar_updated).date()
+    except AttributeError:
+        calendar_updated = None
     bed_type = infos['bed_type']
-    H24_checking = 1 if 43 in infos['amenities'] else 0
+    H24_checking = 1 if 43 in infos['amenities_ids'] else 0
+
+    with open("amenities.txt", "a") as f:
+        f.write(str(infos['amenities']))
 
     # execution requête
     params = (owner_id, min_night, max_night, property_type, calendar_updated,
@@ -32,7 +41,7 @@ def update_listing_info(listing_id):
 
 def update_paris_listings():
     bdd = Pablo()
-    bdd.executerReq("SELECT id_airbnb, listing_name from airbnb limit 10")
+    bdd.executerReq("SELECT id_airbnb, listing_name from airbnb")
     for listing in bdd.resultatReq():
         print("updating %s" % listing[1])
         update_listing_info(listing[0])

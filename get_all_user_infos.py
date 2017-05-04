@@ -39,12 +39,13 @@ def get_users_paris():
 
     bdd.close()
 
-# travailler les requetes !
 def get_new_users():
     pass
     bdd = Pablo()
-
-    bdd.executerReq("SELECT DISTINCT author_id FROM airbnb_review where author_id NOT IN (SELECT DISTINCT user_id FROM airbnb_user)")
+select count(distinct recipient_id) from airbnb_review where recipient_id NOT IN (select user_id from airbnb_user);
+    bdd.executerReq("""SELECT DISTINCT author_id FROM airbnb_review
+                        WHERE author_id NOT IN (
+                        SELECT user_id FROM airbnb_user)""")
     for user in bdd.resultatReq():
         get_user(user)
 

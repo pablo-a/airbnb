@@ -73,7 +73,11 @@ def get_reviews(logement_id):
 
     while offset < nb_reviews:
         json_result = api.get_review(logement_id, offset)
-        data = json.loads(json_result)
+        try:
+            data = json.loads(json_result)
+        except TypeError:
+            offset += 50
+            continue
 
         for review in data['reviews']:
             yield review
@@ -86,7 +90,10 @@ def get_details(logement_id):
     api = Airbnb()
 
     json_result = api.get_logement_details(logement_id)
-    data = json.loads(json_result)
+    try:
+        data = json.loads(json_result)
+    except TypeError:
+        return None
     return data['listing']
 
 def get_available(listing_id, month, year, count=4):
