@@ -9,7 +9,7 @@ def update_listing_info(listing_id, lat, lng):
     bdd = Pablo()
     update_query = """UPDATE airbnb
     SET id_owner = %s, min_night = %s, max_night = %s, property_type = %s,
-    calendar_update = %s, bed_type = %s, H24checking = %s
+    calendar_update = %s, bed_type = %s, H24checking = %s, self_checking = %s
     WHERE id_airbnb = %s"""
 
     # appel à l'interface API
@@ -46,11 +46,12 @@ def update_listing_info(listing_id, lat, lng):
         calendar_updated = None
     bed_type = infos['bed_type']
     H24_checking = 1 if 43 in infos['amenities_ids'] else 0
+    self_checking = 1 if "Self Check-In" in infos['amenities'] else 0
 
 
     # execution requête
     params = (owner_id, min_night, max_night, property_type, calendar_updated,
-    bed_type, H24_checking, listing_id)
+    bed_type, H24_checking, self_checking, listing_id)
     bdd.exec_req_with_args(update_query, params)
     bdd.close()
 

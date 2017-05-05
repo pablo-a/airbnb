@@ -9,7 +9,7 @@ from shapely.geometry import Polygon, mapping
 
 
 def get_square():
-    ville = 'Nantes'
+    ville = 'cities\paris_boudaries'
     df = pd.read_json(ville + '.json')
     coord = df['geometries'][0]['coordinates']
     flattened = [val for sublist in coord for val in sublist]
@@ -63,7 +63,7 @@ def search_on_all_squares():
     lst_coordinates = get_square()
 
     # loop on all squares
-    for coo in lst_coordinates[:1000]:
+    for coo in lst_coordinates:
 
         for appart in get_listings_by_gps(coo[2], coo[3], coo[0], coo[1]):
 
