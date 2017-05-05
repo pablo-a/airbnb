@@ -1,10 +1,11 @@
 # coding=utf-8
 import requests
 import dateparser
+import json
 from pablo import Pablo
 from browse_airbnb import get_details
 
-def update_listing_info(listing_id):
+def update_listing_info(listing_id, lat, lng):
     bdd = Pablo()
     update_query = """UPDATE airbnb
     SET id_owner = %s, min_night = %s, max_night = %s, property_type = %s,
@@ -20,7 +21,7 @@ def update_listing_info(listing_id):
     # ctrl + maj + /
     # gps coordinates => exact address.
     # thx to government API
-    url_req = "http://api-adresse.data.gouv.fr/reverse/?lon=%s&lat=%s" % (longitude, latitude)
+    url_req = "http://api-adresse.data.gouv.fr/reverse/?lon=%s&lat=%s" % (lng, lat)
     response = requests.get(url_req)
     address_json = json.loads(response.content)
     try:
@@ -55,10 +56,10 @@ def update_listing_info(listing_id):
 
 def update_paris_listings():
     bdd = Pablo()
-    bdd.executerReq("SELECT id_airbnb, listing_name from airbnb")
+    bdd.executerReq("SELECT id_airbnb, listing_name, latitude, longitude from airbnb")
     for listing in bdd.resultatReq():
         print("updating %s" % listing[1])
-        update_listing_info(listing[0])
+        update_listing_info(listing[0], listing[2], listing[3])
 
     bdd.close()
 
