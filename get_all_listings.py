@@ -3,14 +3,20 @@ import time
 import json
 import numpy as np
 import pandas as pd
+from get_boundaries import get_boundaries
 from pablo import Pablo
 from browse_airbnb import get_listings_by_gps
 from shapely.geometry import Polygon, mapping
 
 
-def get_square():
-    ville = 'cities\paris_boudaries'
-    df = pd.read_json(ville + '.json')
+def get_squares(city_name):
+
+    json_file = get_boundaries(city_name)
+    try:
+        df = pd.read_json(json_file)
+    except (ValueError, TypeError):
+        return []
+
     coord = df['geometries'][0]['coordinates']
     flattened = [val for sublist in coord for val in sublist]
     max_coord = max(flattened, key=len)
@@ -21,8 +27,10 @@ def get_square():
     minLon = df['Lon'].min()
     minLat = df['Lat'].min()
 
-    dLon = .95*0.00318646430969
-    dLat = .95*0.00137477186218
+    coeff_agrandissement = 3
+
+    dLon = .95 * 0.00318646430969 * coeff_agrandissement
+    dLat = .95 * 0.00137477186218 * coeff_agrandissement
 
     shiftLon = .5 * (minLon + dLon * (int((maxLon - minLon) / dLon) + 1) - maxLon)
     shiftLat = .5 * (minLat + dLat * (int((maxLat - minLat)  /dLat) + 1) - maxLat)
@@ -51,7 +59,7 @@ def get_square():
     return l
 
 
-def search_on_all_squares():
+def get_listings_from_city_name(city_name):
     bdd = Pablo()
 
     insert_req = """INSERT INTO airbnb (
@@ -60,10 +68,14 @@ def search_on_all_squares():
     latitude, longitude, city, date_maj)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
-    lst_coordinates = get_square()
+    lst_coordinates = get_squares(city_name)
 
+    i = 1
+    nb_squares_to_check = len(lst_coordinates)
     # loop on all squares
     for coo in lst_coordinates:
+        print("\n%s/%s squares on %s" % (i, nb_squares_to_check, city_name))
+        i += 1
 
         for appart in get_listings_by_gps(coo[2], coo[3], coo[0], coo[1]):
 
@@ -100,4 +112,30 @@ def search_on_all_squares():
 
 
 if __name__ == '__main__':
-    search_on_all_squares()
+    big_cities = ["Paris", "Marseille", "Lyon", "Nice", "Montpellier",
+    "Toulouse", "Nantes" "Bordeaux", "Lille", "Rennes", "Dijon", "Orleans",
+    "Rouen", "Ajaccio"]
+
+    small_cities = ["Dunkerque", "Boulogne-sur-Mer", "Douai-Lens",
+    "Valenciennes", "Arras", "Amiens", "Creil", "Saint-Quentin", "Compiegne",
+    "Beauvais", "Charleville-Mezieres", "Reims", "Metz", "Nancy", "Strasbourg",
+    "Mulhouse", "Troyes", "Colmar", "Chalons-en-Champagne", "Auxerre",
+    "Nevers", "Chalons-sur-Saone", "Mâcon", "Besançon", "Montbeliard", "Belfort",
+    "Boulogne-Billancourt", "Saint-Denis", "Versailles", "Nanterre", "Creteil",
+    "Meaux", "Evry", "Argenteuil", "Chartres", "Blois","Tours", "Châteauroux",
+    "Bourges", "Le Havre", "Evreux", "Caen","Cherbourg", "Alençon", "Brest",
+    "Lorient", "Saint-Brieuc", "Vannes","Quimper", "Laval", "Le Mans", "Angers",
+    "Saint-Nazaire", "La Roche-sur-Yon", "Cholet", "Les-Sables-d'Olonne",
+    "Poitiers", "Niort","La Rochelle", "Angoulême", "Perigueux", "Agen",
+    "Bayonne","Pau", "Limoges", "Brive-la-Gaillarde", "Dax", "Arcachon",
+    "Mont-de-Marsan","Montauban", "Tarbes", "Albi", "Carcassonne", "Perpignan",
+    "Narbonne", "Beziers", "Nîmes", "Ales", "Auch", "Sete", "Bourg-en-Bresse",
+    "Roanne", "Clermont-Ferrand", "Saint-Etienne","Annecy", "Thonon-les-Bains",
+    "Chambery", "Grenoble", "Valence", "Chamonix","Avignon", "Toulon", "Frejus",
+    "Aix-en-Provence","Arles", "Avignon", "Cannes", "Toulon", "Gap", "Bastia",
+    "Lourdes", "Saint-Malo", "Antibes", "Biarritz", "Saint-Bon-Tarentaise",
+    "Morzine", "Saintes-Maries-de-la-Mer", "Beaune", "Porto-Vecchio",
+    "Aix-les-Bains", "Saint-Tropez"]
+
+    for city in small_cities[21:]:
+        get_listings_from_city_name(city)

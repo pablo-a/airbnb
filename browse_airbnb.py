@@ -16,14 +16,15 @@ def get_listings_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom=18, checkin=None, c
     last_name = ""
 
     while page < 20:
-        print(page)
         json_result = api.get_logement_by_gps(ne_lat, ne_lng, sw_lat, sw_lng, zoom, page)
-        data = json.loads(json_result)
+        try:
+            data = json.loads(json_result)
+        except TypeError:
+            continue
 
         try:
             res = data['explore_tabs'][0]['sections'][0]['listings']
         except IndexError:
-            print("no more result")
             break
 
         current_name = res[0]['listing']['name']
