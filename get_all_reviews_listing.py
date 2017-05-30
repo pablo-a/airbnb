@@ -29,7 +29,7 @@ def get_all_reviews(logement_id):
 
 def get_some_review_paris():
     bdd = Pablo()
-    bdd.executerReq("SELECT id_airbnb, listing_name, review_nb from airbnb where review_nb < 27 order by review_nb desc")
+    bdd.executerReq("SELECT id_airbnb, listing_name, review_nb from airbnb where review_nb < 7 order by review_nb desc")
     for listing in bdd.resultatReq():
         id_listing = listing[0]
         print("getting %d reviews of %s" % (listing[2], listing[1]))

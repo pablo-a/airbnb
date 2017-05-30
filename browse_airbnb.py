@@ -69,7 +69,10 @@ def get_reviews(logement_id):
     api = Airbnb()
 
     offset = 0
-    json_result = json.loads(api.get_review(logement_id, 0))
+    try:
+        json_result = json.loads(api.get_review(logement_id, 0))
+    except TypeError:
+        return
     nb_reviews = json_result['metadata']['reviews_count']
 
     while offset < nb_reviews:

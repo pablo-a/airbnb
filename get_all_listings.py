@@ -27,7 +27,7 @@ def get_squares(city_name):
     minLon = df['Lon'].min()
     minLat = df['Lat'].min()
 
-    coeff_agrandissement = 3
+    coeff_agrandissement = 1
 
     dLon = .95 * 0.00318646430969 * coeff_agrandissement
     dLat = .95 * 0.00137477186218 * coeff_agrandissement
@@ -112,18 +112,18 @@ def get_listings_from_city_name(city_name):
 
 
 if __name__ == '__main__':
-    big_cities = ["Paris", "Marseille", "Lyon", "Nice", "Montpellier",
-    "Toulouse", "Nantes" "Bordeaux", "Lille", "Rennes", "Dijon", "Orleans",
-    "Rouen", "Ajaccio"]
+    big_cities = ["Marseille", "Lyon", "Nice", "Montpellier",
+    "Toulouse", "Nantes", "Bordeaux", "Lille", "Rennes", "Dijon", "Orleans",
+    "Rouen", "Ajaccio", "Paris", "Cannes"]
 
-    small_cities = ["Dunkerque", "Boulogne-sur-Mer", "Douai-Lens",
+    small_cities = ["Dunkerque", "Boulogne-sur-Mer", "Douai", "Lens",
     "Valenciennes", "Arras", "Amiens", "Creil", "Saint-Quentin", "Compiegne",
     "Beauvais", "Charleville-Mezieres", "Reims", "Metz", "Nancy", "Strasbourg",
     "Mulhouse", "Troyes", "Colmar", "Chalons-en-Champagne", "Auxerre",
-    "Nevers", "Chalons-sur-Saone", "Mâcon", "Besançon", "Montbeliard", "Belfort",
+    "Nevers", "Chalon-sur-Saone", "Mâcon", "Besançon", "Montbeliard", "Belfort",
     "Boulogne-Billancourt", "Saint-Denis", "Versailles", "Nanterre", "Creteil",
     "Meaux", "Evry", "Argenteuil", "Chartres", "Blois","Tours", "Châteauroux",
-    "Bourges", "Le Havre", "Evreux", "Caen","Cherbourg", "Alençon", "Brest",
+    "Bourges", "Le Havre", "Evreux", "Caen","Cherbourg-Octeville", "Alençon", "Brest",
     "Lorient", "Saint-Brieuc", "Vannes","Quimper", "Laval", "Le Mans", "Angers",
     "Saint-Nazaire", "La Roche-sur-Yon", "Cholet", "Les-Sables-d'Olonne",
     "Poitiers", "Niort","La Rochelle", "Angoulême", "Perigueux", "Agen",
@@ -132,10 +132,10 @@ if __name__ == '__main__':
     "Narbonne", "Beziers", "Nîmes", "Ales", "Auch", "Sete", "Bourg-en-Bresse",
     "Roanne", "Clermont-Ferrand", "Saint-Etienne","Annecy", "Thonon-les-Bains",
     "Chambery", "Grenoble", "Valence", "Chamonix","Avignon", "Toulon", "Frejus",
-    "Aix-en-Provence","Arles", "Avignon", "Cannes", "Toulon", "Gap", "Bastia",
+    "Aix-en-Provence","Arles", "Avignon", "Toulon", "Gap", "Bastia",
     "Lourdes", "Saint-Malo", "Antibes", "Biarritz", "Saint-Bon-Tarentaise",
     "Morzine", "Saintes-Maries-de-la-Mer", "Beaune", "Porto-Vecchio",
     "Aix-les-Bains", "Saint-Tropez"]
 
-    for city in small_cities[21:]:
+    for city in small_cities:
         get_listings_from_city_name(city)

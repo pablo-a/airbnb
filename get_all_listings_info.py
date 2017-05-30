@@ -57,7 +57,8 @@ def update_listing_info(listing_id, lat, lng):
 
 def update_paris_listings():
     bdd = Pablo()
-    bdd.executerReq("SELECT id_airbnb, listing_name, latitude, longitude from airbnb")
+    # only get fields not updated.
+    bdd.executerReq("SELECT id_airbnb, listing_name, latitude, longitude from airbnb where calendar_update IS NULL")
     for listing in bdd.resultatReq():
         print("updating %s" % listing[1])
         update_listing_info(listing[0], listing[2], listing[3])

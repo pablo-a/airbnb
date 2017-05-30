@@ -9,6 +9,10 @@ def get_availability(listing_id):
     insert_query = """INSERT INTO airbnb_dispo
     (listing_id, date_dispo, availability, price, date_extract)
     VALUES (%s, %s, %s, %s, %s)"""
+    
+    update_query = """UPDATE airbnb_dispo
+    SET availability = %s, price = %s, date_extract = %s
+    WHERE listing_id = %s AND date_dispo = %s"""
 
     # init parameters
     today = time.strftime("%Y%m%d")
