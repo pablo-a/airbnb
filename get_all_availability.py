@@ -33,7 +33,7 @@ def get_availability(listing_id):
 def get_availability_paris():
     bdd = Pablo()
 
-    bdd.executerReq("SELECT id_airbnb, listing_name FROM airbnb LIMIT 5")
+    bdd.executerReq("SELECT id_airbnb, listing_name FROM airbnb_selected")
     for listing in bdd.resultatReq():
         print("getting availability for %s" % listing[1])
         get_availability(listing[0])

@@ -3,6 +3,7 @@ import time
 import json
 import numpy as np
 import pandas as pd
+from MySQLdb import IntegrityError
 from get_boundaries import get_boundaries
 from pablo import Pablo
 from browse_airbnb import get_listings_by_gps
@@ -68,6 +69,12 @@ def get_listings_from_city_name(city_name):
     latitude, longitude, city, date_maj)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
+    update_req = """UPDATE airbnb
+    SET rate = %s, review_nb = %s, star_rating = %s, instant_book = %s,
+    superhost = %s, business_travel = %s, is_new = %s, picture_nb = %s,
+    date_maj = %s
+    WHERE id_airbnb = %s"""
+
     lst_coordinates = get_squares(city_name)
 
     i = 1
@@ -106,7 +113,12 @@ def get_listings_from_city_name(city_name):
             business_travel_ready, is_new, picture_nb, latitude, longitude,
             city, date_maj)
 
-            bdd.exec_req_with_args(insert_req, params)
+            try:
+                bdd.exec_req_with_args(insert_req, params)
+            except IntegrityError:
+                params = (rate_amount, nb_reviews, star_rating, instant_book,
+                superhost, business_travel_ready, is_new, picture_nb, date_maj)
+                bdd.exec_req_with_args(update_req, params)
 
     bdd.close()
 
@@ -131,11 +143,21 @@ if __name__ == '__main__':
     "Mont-de-Marsan","Montauban", "Tarbes", "Albi", "Carcassonne", "Perpignan",
     "Narbonne", "Beziers", "Nîmes", "Ales", "Auch", "Sete", "Bourg-en-Bresse",
     "Roanne", "Clermont-Ferrand", "Saint-Etienne","Annecy", "Thonon-les-Bains",
-    "Chambery", "Grenoble", "Valence", "Chamonix","Avignon", "Toulon", "Frejus",
+    "Chambery", "Grenoble", "Valence france", "Chamonix","Avignon", "Toulon", "Frejus",
     "Aix-en-Provence","Arles", "Avignon", "Cannes", "Toulon", "Gap", "Bastia",
     "Lourdes", "Saint-Malo", "Antibes", "Biarritz", "Saint-Bon-Tarentaise",
     "Morzine", "Saintes-Maries-de-la-Mer", "Beaune", "Porto-Vecchio",
-    "Aix-les-Bains", "Saint-Tropez"]
+    "Aix-les-Bains", "Saint-Tropez", 'Saint-Nazaire 44600', 'Douai', 'Lens',
+    'Chalon-sur-Sa\xc3\xb4ne']
 
-    for city in small_cities[21:]:
+    # missing = ['Douai', 'Lens', 'Chalon-sur-Sa\xc3\xb4ne', 'Saint-Nazaire']
+    missing = ['Chamonix-Mont-Blanc', 'Cherbourg-Octeville', 'Saint-Bon-Tarentaise', "valence france"]
+
+    for city in missing:
         get_listings_from_city_name(city)
+
+    # for city in small_cities:
+    #     get_listings_from_city_name(city)
+    #
+    # for city in big_cities:
+    #     get_listings_from_city_name(city)
