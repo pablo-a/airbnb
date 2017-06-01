@@ -103,7 +103,10 @@ def get_available(listing_id, month, year, count=4):
 
     airbnb = Airbnb()
     json_result = airbnb.get_available(listing_id, month, year, count)
-    data = json.loads(json_result)
+    try:
+        data = json.loads(json_result)
+    except TypeError:
+        return None
     return data['calendar_months']
 
 
