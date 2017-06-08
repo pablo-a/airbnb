@@ -6,7 +6,7 @@ from browse_airbnb import get_available
 
 def get_availability(listing_id):
     bdd = Pablo()
-    insert_query = """INSERT INTO airbnb_dispo
+    insert_query = """INSERT INTO airbnb_dispo_test_20000
     (listing_id, date_dispo, availability, price, date_extract)
     VALUES (%s, %s, %s, %s, %s)"""
     
@@ -18,10 +18,11 @@ def get_availability(listing_id):
     today = time.strftime("%Y%m%d")
     month = time.strftime("%m")
     year = time.strftime("%Y")
-    count = 4
+    count = 2
 
     calendar = get_available(listing_id, month, year, count)
-
+    if calendar is None:
+        return 0
     for month in calendar:
         for day in month['days']:
             date_dispo = day['date']
@@ -37,10 +38,15 @@ def get_availability(listing_id):
 def get_availability_paris():
     bdd = Pablo()
 
-    bdd.executerReq("SELECT id_airbnb, listing_name FROM airbnb LIMIT 5")
+    bdd.executerReq("SELECT id_airbnb FROM test")
+    lenght = len(bdd.resultatReq())
+    
+    i = 1
+    bdd.executerReq("SELECT id_airbnb FROM test")
     for listing in bdd.resultatReq():
-        print("getting availability for %s" % listing[1])
+        print("%s on %s listings" % (i, lenght))
         get_availability(listing[0])
+        i += 1
 
 if __name__ == '__main__':
     get_availability_paris()
