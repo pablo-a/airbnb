@@ -72,13 +72,9 @@ def get_reviews(logement_id):
     try:
         json_result = json.loads(api.get_review(logement_id, 0))
     except TypeError:
-<<<<<<< HEAD
         print("Type Error for get_reviews")
         return
 
-=======
-        return
->>>>>>> 6c9245dae598c2c784fdab4f4b9313d72452dfbf
     nb_reviews = json_result['metadata']['reviews_count']
 
     while offset < nb_reviews:
