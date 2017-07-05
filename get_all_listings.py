@@ -28,7 +28,7 @@ def get_squares(city_name):
     minLon = df['Lon'].min()
     minLat = df['Lat'].min()
 
-    coeff_agrandissement = 3
+    coeff_agrandissement = 2
 
     dLon = .95 * 0.00318646430969 * coeff_agrandissement
     dLat = .95 * 0.00137477186218 * coeff_agrandissement
@@ -114,10 +114,12 @@ def get_listings_from_city_name(city_name):
             city, date_maj)
 
             try:
-                bdd.exec_req_with_args(insert_req, params)
+                bdd.cursor.execute(insert_req, params)
             except IntegrityError:
+                print("integrity error for %s, updating" % str(id_airbnb))
                 params = (rate_amount, nb_reviews, star_rating, instant_book,
-                superhost, business_travel_ready, is_new, picture_nb, date_maj)
+                superhost, business_travel_ready, is_new, picture_nb, date_maj,
+                id_airbnb)
                 bdd.exec_req_with_args(update_req, params)
 
     bdd.close()
@@ -153,11 +155,12 @@ if __name__ == '__main__':
     # missing = ['Douai', 'Lens', 'Chalon-sur-Sa\xc3\xb4ne', 'Saint-Nazaire']
     missing = ['Chamonix-Mont-Blanc', 'Cherbourg-Octeville', 'Saint-Bon-Tarentaise', "valence france"]
 
-    for city in missing:
-        get_listings_from_city_name(city)
-
-    # for city in small_cities:
+    # for city in missing:
     #     get_listings_from_city_name(city)
+    #
     #
     # for city in big_cities:
     #     get_listings_from_city_name(city)
+
+    for city in small_cities[::-1]:
+        get_listings_from_city_name(city)

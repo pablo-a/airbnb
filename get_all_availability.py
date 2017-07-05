@@ -6,7 +6,7 @@ from browse_airbnb import get_available
 
 def get_availability(listing_id):
     bdd = Pablo()
-    insert_query = """INSERT INTO airbnb_dispo_test_20000
+    insert_query = """INSERT INTO airbnb_dispo_global
     (listing_id, date_dispo, availability, price, date_extract)
     VALUES (%s, %s, %s, %s, %s)"""
 
@@ -16,8 +16,15 @@ def get_availability(listing_id):
     year = time.strftime("%Y")
     count = 2
 
-    calendar = get_available(listing_id, month, year, count)
+    # in case requests bugs, or airbnb blocks too many requests
+    try:
+        calendar = get_available(listing_id, month, year, count)
+    except requests.exceptions.ConnectionError:
+        time.sleep(200)
+        return
+
     if calendar is None:
+        time.sleep(15)
         return 0
     for month in calendar:
         for day in month['days']:
@@ -34,14 +41,15 @@ def get_availability(listing_id):
 def get_availability_paris():
     bdd = Pablo()
 
-    bdd.executerReq("SELECT id_airbnb FROM test")
+    bdd.executerReq("SELECT id_airbnb FROM airbnb")
     lenght = len(bdd.resultatReq())
-    
-    i = 1
-    bdd.executerReq("SELECT id_airbnb FROM test")
-    for listing in bdd.resultatReq():
+
+    i = 11000
+    bdd.executerReq("SELECT id_airbnb FROM airbnb")
+    for listing in bdd.resultatReq()[11000:]:
         print("%s on %s listings" % (i, lenght))
         get_availability(listing[0])
+        time.sleep(0.5)
         i += 1
 
 if __name__ == '__main__':
