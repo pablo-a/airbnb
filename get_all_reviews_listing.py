@@ -31,9 +31,13 @@ def get_all_reviews(logement_id):
 def get_some_review_paris():
     bdd = Pablo()
 
-    i = 130000
-    bdd.executerReq("SELECT distinct id_airbnb from airbnb")
-    for listing in bdd.resultatReq()[130000:]:
+    i = 0
+    # bdd.executerReq("SELECT distinct listing_id from airbnb_reviews_20k order by id desc")
+    req = """SELECT listing_id FROM airbnb_reviews_20k WHERE listing_id NOT IN
+    (SELECT DISTINCT listing_id FROM airbnb_review_global WHERE date_creation > 20170531
+    AND date_creation < 20170701)"""
+    bdd.executerReq(req)
+    for listing in bdd.resultatReq()[::-1]:
         i += 1
         id_listing = listing[0]
         print("listing number : %s" % i)

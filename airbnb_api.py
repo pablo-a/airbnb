@@ -51,7 +51,7 @@ class Airbnb(object):
     def get_review(self, logement_id, offset):
         url = "https://api.airbnb.com/v2/reviews"
         params = {
-            "client_id" : "3092nxybyb0otqw18e8nh5nty",
+            "client_id" : "d306zoyjsyarp7ifhu67rjxn52tv0t20",
             "locale" : "en-US",
             "currency" : "USD",
             "_format" : "for_mobile_client",
@@ -64,9 +64,9 @@ class Airbnb(object):
 
         response = requests.get(url, params=params)
         if response.status_code != 200:
+            print("response status code : %s" % response.status_code)
             return response.status_code
         return response.content
-
 
     def get_logement(self, city, checkin, checkout, offset):
         """With this function you can get lots of infos (especially the housing
@@ -80,7 +80,7 @@ class Airbnb(object):
         key2 = "d306zoyjsyarp7ifhu67rjxn52tv0t20"
 
         params = {
-            "client_id" : key1,
+            "client_id" : key2,
             "locale" : "en-US",
             "currency" : "USD",
             "_limit" : "50",

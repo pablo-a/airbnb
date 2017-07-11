@@ -90,6 +90,24 @@ def get_reviews(logement_id):
 
         offset += 50
 
+def get_new_reviews(logement_id):
+    api = Airbnb()
+    try:
+        json_result = json.loads(api.get_review(logement_id, 0))
+    except TypeError:
+        print("Type Error for get_reviews")
+        return
+
+    try:
+        data = json.loads(json_result)
+    except TypeError:
+        offset += 50
+        return
+
+    for review in data['reviews']:
+        yield review
+
+
 def get_details(logement_id):
     """take a logement id (string or int) as a parameter and return
     a dictionnary object with all the infos wanted"""
