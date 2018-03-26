@@ -1,5 +1,8 @@
 # Airbnb API usage
 
+There are a lot of endpoints available, here only 2 are explained as examples
+but you can find all wrapper function on airbnb_api.py file.
+
 ## availability of a listing
 
 HTTP Method : ``GET``  
